@@ -33,7 +33,7 @@ public class DecryptRequest extends Gs2BasicRequest<DecryptRequest> {
 	/**
 	 * 暗号鍵名を設定。
 	 * 
-	 * @param name 暗号鍵名
+	 * @param keyName 暗号鍵名
 	 */
 	public void setKeyName(String keyName) {
 		this.keyName = keyName;
@@ -42,7 +42,7 @@ public class DecryptRequest extends Gs2BasicRequest<DecryptRequest> {
 	/**
 	 * 暗号鍵名を設定。
 	 * 
-	 * @param name 暗号鍵名
+	 * @param keyName 暗号鍵名
 	 * @return this
 	 */
 	public DecryptRequest withKeyName(String keyName) {
