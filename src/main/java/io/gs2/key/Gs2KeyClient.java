@@ -3,6 +3,7 @@ package io.gs2.key;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.gs2.key.control.*;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -15,15 +16,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.gs2.AbstractGs2Client;
 import io.gs2.Gs2Constant;
-import io.gs2.key.control.CreateKeyRequest;
-import io.gs2.key.control.CreateKeyResult;
-import io.gs2.key.control.DecryptRequest;
-import io.gs2.key.control.DecryptResult;
-import io.gs2.key.control.DeleteKeyRequest;
-import io.gs2.key.control.DescribeKeyRequest;
-import io.gs2.key.control.DescribeKeyResult;
-import io.gs2.key.control.EncryptRequest;
-import io.gs2.key.control.EncryptResult;
 import io.gs2.model.IGs2Credential;
 
 /**
@@ -85,6 +77,23 @@ public class Gs2KeyClient extends AbstractGs2Client<Gs2KeyClient> {
 				DescribeKeyRequest.Constant.MODULE, 
 				DescribeKeyRequest.Constant.FUNCTION);
 		return doRequest(get, DescribeKeyResult.class);
+	}
+
+	/**
+	 * 暗号鍵を取得。
+	 *
+	 * @param request リクエストパラメータ
+	 * @return 暗号鍵
+	 */
+	public GetKeyResult getKey(GetKeyRequest request) {
+		String url = Gs2Constant.ENDPOINT_HOST + "/key/" + request.getKeyName();
+		HttpGet get = createHttpGet(
+				url,
+				credential,
+				ENDPOINT,
+				GetKeyRequest.Constant.MODULE,
+				GetKeyRequest.Constant.FUNCTION);
+		return doRequest(get, GetKeyResult.class);
 	}
 
 	/**
