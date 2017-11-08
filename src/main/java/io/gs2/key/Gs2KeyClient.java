@@ -1,13 +1,30 @@
+/*
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
+ * Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
 package io.gs2.key;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.gs2.key.control.*;
+import io.gs2.util.EncodingUtil;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -17,136 +34,193 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.gs2.AbstractGs2Client;
 import io.gs2.Gs2Constant;
 import io.gs2.model.IGs2Credential;
+import io.gs2.key.control.*;
 
 /**
  * GS2 Key API クライアント
- * 
+ *
  * @author Game Server Services, Inc.
  *
  */
 public class Gs2KeyClient extends AbstractGs2Client<Gs2KeyClient> {
 
 	public static String ENDPOINT = "key";
-	
+
 	/**
 	 * コンストラクタ。
-	 * 
+	 *
 	 * @param credential 認証情報
 	 */
 	public Gs2KeyClient(IGs2Credential credential) {
 		super(credential);
 	}
 
+
 	/**
-	 * 暗号鍵を作成。
-	 * 
+	 * 暗号鍵を新規作成します<br>
+	 * <br>
+	 *
 	 * @param request リクエストパラメータ
-	 * @return 作成結果
+	 * @return 結果
 	 */
+
 	public CreateKeyResult createKey(CreateKeyRequest request) {
+
 		ObjectNode body = JsonNodeFactory.instance.objectNode()
 				.put("name", request.getName());
+
 		HttpPost post = createHttpPost(
-				Gs2Constant.ENDPOINT_HOST + "/key", 
-				credential, 
+				Gs2Constant.ENDPOINT_HOST + "/key",
+				credential,
 				ENDPOINT,
-				CreateKeyRequest.Constant.MODULE, 
+				CreateKeyRequest.Constant.MODULE,
 				CreateKeyRequest.Constant.FUNCTION,
 				body.toString());
+
+
 		return doRequest(post, CreateKeyResult.class);
+
 	}
-	
+
+
 	/**
-	 * 暗号鍵一覧を取得。
-	 * 
+	 * 復号化処理を実行します<br>
+	 * <br>
+	 *
 	 * @param request リクエストパラメータ
-	 * @return 暗号鍵一覧
+	 * @return 結果
 	 */
+
+	public DecryptResult decrypt(DecryptRequest request) {
+
+		ObjectNode body = JsonNodeFactory.instance.objectNode()
+				.put("data", request.getData());
+
+		HttpPost post = createHttpPost(
+				Gs2Constant.ENDPOINT_HOST + "/key/" + (request.getKeyName() == null ? "null" : request.getKeyName()) + "/decrypt",
+				credential,
+				ENDPOINT,
+				DecryptRequest.Constant.MODULE,
+				DecryptRequest.Constant.FUNCTION,
+				body.toString());
+
+
+		return doRequest(post, DecryptResult.class);
+
+	}
+
+
+	/**
+	 * 暗号鍵を削除します<br>
+	 * <br>
+	 *
+	 * @param request リクエストパラメータ
+	 */
+
+	public void deleteKey(DeleteKeyRequest request) {
+
+	    String url = Gs2Constant.ENDPOINT_HOST + "/key/" + (request.getKeyName() == null ? "null" : request.getKeyName()) + "";
+
+
+
+		HttpDelete delete = createHttpDelete(
+				url,
+				credential,
+				ENDPOINT,
+				DeleteKeyRequest.Constant.MODULE,
+				DeleteKeyRequest.Constant.FUNCTION);
+
+
+		doRequest(delete, null);
+
+	}
+
+
+	/**
+	 * 暗号鍵の一覧を取得します<br>
+	 * <br>
+	 *
+	 * @param request リクエストパラメータ
+	 * @return 結果
+	 */
+
 	public DescribeKeyResult describeKey(DescribeKeyRequest request) {
-		String url = Gs2Constant.ENDPOINT_HOST + "/key";
-		List<NameValuePair> queryString = new ArrayList<>();
-		if(request.getLimit() != null) queryString.add(new BasicNameValuePair("limit", String.valueOf(request.getLimit())));
-		if(request.getPageToken() != null) queryString.add(new BasicNameValuePair("pageToken", request.getPageToken()));
+
+	    String url = Gs2Constant.ENDPOINT_HOST + "/key";
+
+        List<NameValuePair> queryString = new ArrayList<>();
+        if(request.getPageToken() != null) queryString.add(new BasicNameValuePair("pageToken", String.valueOf(request.getPageToken())));
+        if(request.getLimit() != null) queryString.add(new BasicNameValuePair("limit", String.valueOf(request.getLimit())));
+
+
 		if(queryString.size() > 0) {
 			url += "?" + URLEncodedUtils.format(queryString, "UTF-8");
 		}
 		HttpGet get = createHttpGet(
-				url, 
-				credential, 
+				url,
+				credential,
 				ENDPOINT,
-				DescribeKeyRequest.Constant.MODULE, 
+				DescribeKeyRequest.Constant.MODULE,
 				DescribeKeyRequest.Constant.FUNCTION);
+
+
 		return doRequest(get, DescribeKeyResult.class);
+
 	}
 
+
 	/**
-	 * 暗号鍵を取得。
+	 * 暗号化処理を実行します<br>
+	 * <br>
 	 *
 	 * @param request リクエストパラメータ
-	 * @return 暗号鍵
+	 * @return 結果
 	 */
+
+	public EncryptResult encrypt(EncryptRequest request) {
+
+		ObjectNode body = JsonNodeFactory.instance.objectNode()
+				.put("data", request.getData());
+
+		HttpPost post = createHttpPost(
+				Gs2Constant.ENDPOINT_HOST + "/key/" + (request.getKeyName() == null ? "null" : request.getKeyName()) + "/encrypt",
+				credential,
+				ENDPOINT,
+				EncryptRequest.Constant.MODULE,
+				EncryptRequest.Constant.FUNCTION,
+				body.toString());
+
+
+		return doRequest(post, EncryptResult.class);
+
+	}
+
+
+	/**
+	 * 暗号鍵を取得します<br>
+	 * <br>
+	 *
+	 * @param request リクエストパラメータ
+	 * @return 結果
+	 */
+
 	public GetKeyResult getKey(GetKeyRequest request) {
-		String url = Gs2Constant.ENDPOINT_HOST + "/key/" + request.getKeyName();
+
+	    String url = Gs2Constant.ENDPOINT_HOST + "/key/" + (request.getKeyName() == null ? "null" : request.getKeyName()) + "";
+
+
+
 		HttpGet get = createHttpGet(
 				url,
 				credential,
 				ENDPOINT,
 				GetKeyRequest.Constant.MODULE,
 				GetKeyRequest.Constant.FUNCTION);
+
+
 		return doRequest(get, GetKeyResult.class);
+
 	}
 
-	/**
-	 * 暗号鍵を削除。
-	 * 
-	 * @param request リクエストパラメータ
-	 */
-	public void deleteKey(DeleteKeyRequest request) {
-		HttpDelete delete = createHttpDelete(
-				Gs2Constant.ENDPOINT_HOST + "/key/" + request.getKeyName(), 
-				credential, 
-				ENDPOINT,
-				DeleteKeyRequest.Constant.MODULE, 
-				DeleteKeyRequest.Constant.FUNCTION);
-		doRequest(delete, null);
-	}
 
-	/**
-	 * 暗号化を実行。
-	 * 
-	 * @param request リクエストパラメータ
-	 * @return 暗号化結果
-	 */
-	public EncryptResult encrypt(EncryptRequest request) {
-		ObjectNode body = JsonNodeFactory.instance.objectNode()
-				.put("data", request.getData());
-		HttpPost post = createHttpPost(
-				Gs2Constant.ENDPOINT_HOST + "/key/" + request.getKeyName() + "/encrypt", 
-				credential, 
-				ENDPOINT,
-				EncryptRequest.Constant.MODULE, 
-				EncryptRequest.Constant.FUNCTION,
-				body.toString());
-		return doRequest(post, EncryptResult.class);
-	}
-
-	/**
-	 * 復号化を実行。
-	 * 
-	 * @param request リクエストパラメータ
-	 * @return 復号化結果
-	 */
-	public DecryptResult decrypt(DecryptRequest request) {
-		ObjectNode body = JsonNodeFactory.instance.objectNode()
-				.put("data", request.getData());
-		HttpPost post = createHttpPost(
-				Gs2Constant.ENDPOINT_HOST + "/key/" + request.getKeyName() + "/decrypt", 
-				credential, 
-				ENDPOINT,
-				DecryptRequest.Constant.MODULE, 
-				DecryptRequest.Constant.FUNCTION,
-				body.toString());
-		return doRequest(post, DecryptResult.class);
-	}
-	
 }
