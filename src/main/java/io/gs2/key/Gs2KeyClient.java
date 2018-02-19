@@ -61,7 +61,9 @@ public class Gs2KeyClient extends AbstractGs2Client<Gs2KeyClient> {
 	 * <br>
 	 *
 	 * @param request リクエストパラメータ
+
 	 * @return 結果
+
 	 */
 
 	public CreateKeyResult createKey(CreateKeyRequest request) {
@@ -76,6 +78,9 @@ public class Gs2KeyClient extends AbstractGs2Client<Gs2KeyClient> {
 				CreateKeyRequest.Constant.MODULE,
 				CreateKeyRequest.Constant.FUNCTION,
 				body.toString());
+        if(request.getRequestId() != null) {
+            post.setHeader("X-GS2-REQUEST-ID", request.getRequestId());
+        }
 
 
 		return doRequest(post, CreateKeyResult.class);
@@ -88,7 +93,9 @@ public class Gs2KeyClient extends AbstractGs2Client<Gs2KeyClient> {
 	 * <br>
 	 *
 	 * @param request リクエストパラメータ
+
 	 * @return 結果
+
 	 */
 
 	public DecryptResult decrypt(DecryptRequest request) {
@@ -97,12 +104,15 @@ public class Gs2KeyClient extends AbstractGs2Client<Gs2KeyClient> {
 				.put("data", request.getData());
 
 		HttpPost post = createHttpPost(
-				Gs2Constant.ENDPOINT_HOST + "/key/" + (request.getKeyName() == null ? "null" : request.getKeyName()) + "/decrypt",
+				Gs2Constant.ENDPOINT_HOST + "/key/" + (request.getKeyName() == null || request.getKeyName().equals("") ? "null" : request.getKeyName()) + "/decrypt",
 				credential,
 				ENDPOINT,
 				DecryptRequest.Constant.MODULE,
 				DecryptRequest.Constant.FUNCTION,
 				body.toString());
+        if(request.getRequestId() != null) {
+            post.setHeader("X-GS2-REQUEST-ID", request.getRequestId());
+        }
 
 
 		return doRequest(post, DecryptResult.class);
@@ -115,11 +125,12 @@ public class Gs2KeyClient extends AbstractGs2Client<Gs2KeyClient> {
 	 * <br>
 	 *
 	 * @param request リクエストパラメータ
+
 	 */
 
 	public void deleteKey(DeleteKeyRequest request) {
 
-	    String url = Gs2Constant.ENDPOINT_HOST + "/key/" + (request.getKeyName() == null ? "null" : request.getKeyName()) + "";
+	    String url = Gs2Constant.ENDPOINT_HOST + "/key/" + (request.getKeyName() == null || request.getKeyName().equals("") ? "null" : request.getKeyName()) + "";
 
 
 
@@ -129,6 +140,9 @@ public class Gs2KeyClient extends AbstractGs2Client<Gs2KeyClient> {
 				ENDPOINT,
 				DeleteKeyRequest.Constant.MODULE,
 				DeleteKeyRequest.Constant.FUNCTION);
+        if(request.getRequestId() != null) {
+            delete.setHeader("X-GS2-REQUEST-ID", request.getRequestId());
+        }
 
 
 		doRequest(delete, null);
@@ -141,7 +155,9 @@ public class Gs2KeyClient extends AbstractGs2Client<Gs2KeyClient> {
 	 * <br>
 	 *
 	 * @param request リクエストパラメータ
+
 	 * @return 結果
+
 	 */
 
 	public DescribeKeyResult describeKey(DescribeKeyRequest request) {
@@ -162,6 +178,9 @@ public class Gs2KeyClient extends AbstractGs2Client<Gs2KeyClient> {
 				ENDPOINT,
 				DescribeKeyRequest.Constant.MODULE,
 				DescribeKeyRequest.Constant.FUNCTION);
+        if(request.getRequestId() != null) {
+            get.setHeader("X-GS2-REQUEST-ID", request.getRequestId());
+        }
 
 
 		return doRequest(get, DescribeKeyResult.class);
@@ -174,7 +193,9 @@ public class Gs2KeyClient extends AbstractGs2Client<Gs2KeyClient> {
 	 * <br>
 	 *
 	 * @param request リクエストパラメータ
+
 	 * @return 結果
+
 	 */
 
 	public EncryptResult encrypt(EncryptRequest request) {
@@ -183,12 +204,15 @@ public class Gs2KeyClient extends AbstractGs2Client<Gs2KeyClient> {
 				.put("data", request.getData());
 
 		HttpPost post = createHttpPost(
-				Gs2Constant.ENDPOINT_HOST + "/key/" + (request.getKeyName() == null ? "null" : request.getKeyName()) + "/encrypt",
+				Gs2Constant.ENDPOINT_HOST + "/key/" + (request.getKeyName() == null || request.getKeyName().equals("") ? "null" : request.getKeyName()) + "/encrypt",
 				credential,
 				ENDPOINT,
 				EncryptRequest.Constant.MODULE,
 				EncryptRequest.Constant.FUNCTION,
 				body.toString());
+        if(request.getRequestId() != null) {
+            post.setHeader("X-GS2-REQUEST-ID", request.getRequestId());
+        }
 
 
 		return doRequest(post, EncryptResult.class);
@@ -201,12 +225,14 @@ public class Gs2KeyClient extends AbstractGs2Client<Gs2KeyClient> {
 	 * <br>
 	 *
 	 * @param request リクエストパラメータ
+
 	 * @return 結果
+
 	 */
 
 	public GetKeyResult getKey(GetKeyRequest request) {
 
-	    String url = Gs2Constant.ENDPOINT_HOST + "/key/" + (request.getKeyName() == null ? "null" : request.getKeyName()) + "";
+	    String url = Gs2Constant.ENDPOINT_HOST + "/key/" + (request.getKeyName() == null || request.getKeyName().equals("") ? "null" : request.getKeyName()) + "";
 
 
 
@@ -216,6 +242,9 @@ public class Gs2KeyClient extends AbstractGs2Client<Gs2KeyClient> {
 				ENDPOINT,
 				GetKeyRequest.Constant.MODULE,
 				GetKeyRequest.Constant.FUNCTION);
+        if(request.getRequestId() != null) {
+            get.setHeader("X-GS2-REQUEST-ID", request.getRequestId());
+        }
 
 
 		return doRequest(get, GetKeyResult.class);
