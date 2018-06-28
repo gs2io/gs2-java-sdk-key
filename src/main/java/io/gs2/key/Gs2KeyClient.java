@@ -18,7 +18,9 @@ package io.gs2.key;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import io.gs2.model.Region;
 import io.gs2.util.EncodingUtil;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpDelete;
@@ -53,6 +55,26 @@ public class Gs2KeyClient extends AbstractGs2Client<Gs2KeyClient> {
 	 */
 	public Gs2KeyClient(IGs2Credential credential) {
 		super(credential);
+	}
+
+	/**
+	 * コンストラクタ。
+	 *
+	 * @param credential 認証情報
+	 * @param region リージョン
+	 */
+	public Gs2KeyClient(IGs2Credential credential, Region region) {
+		super(credential, region);
+	}
+
+	/**
+	 * コンストラクタ。
+	 *
+	 * @param credential 認証情報
+	 * @param region リージョン
+	 */
+	public Gs2KeyClient(IGs2Credential credential, String region) {
+		super(credential, region);
 	}
 
 

@@ -30,14 +30,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class Key implements Serializable {
 
-	/** オーナーID */
-	private String ownerId;
-
 	/** 暗号鍵GRN */
 	private String keyId;
 
-	/** 最終更新日時(エポック秒) */
-	private Integer updateAt;
+	/** オーナーID */
+	private String ownerId;
 
 	/** 暗号鍵名 */
 	private String name;
@@ -45,24 +42,6 @@ public class Key implements Serializable {
 	/** 作成日時(エポック秒) */
 	private Integer createAt;
 
-
-	/**
-	 * オーナーIDを取得
-	 *
-	 * @return オーナーID
-	 */
-	public String getOwnerId() {
-		return ownerId;
-	}
-
-	/**
-	 * オーナーIDを設定
-	 *
-	 * @param ownerId オーナーID
-	 */
-	public void setOwnerId(String ownerId) {
-		this.ownerId = ownerId;
-	}
 
 	/**
 	 * 暗号鍵GRNを取得
@@ -83,21 +62,21 @@ public class Key implements Serializable {
 	}
 
 	/**
-	 * 最終更新日時(エポック秒)を取得
+	 * オーナーIDを取得
 	 *
-	 * @return 最終更新日時(エポック秒)
+	 * @return オーナーID
 	 */
-	public Integer getUpdateAt() {
-		return updateAt;
+	public String getOwnerId() {
+		return ownerId;
 	}
 
 	/**
-	 * 最終更新日時(エポック秒)を設定
+	 * オーナーIDを設定
 	 *
-	 * @param updateAt 最終更新日時(エポック秒)
+	 * @param ownerId オーナーID
 	 */
-	public void setUpdateAt(Integer updateAt) {
-		this.updateAt = updateAt;
+	public void setOwnerId(String ownerId) {
+		this.ownerId = ownerId;
 	}
 
 	/**
